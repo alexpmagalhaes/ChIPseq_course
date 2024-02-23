@@ -1,0 +1,13 @@
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: true
+include:
+  - QC_Trim
+  - mapping
+  - peak_calling
+  - chipseeker
+  - coverage
+  - visul_r
+theme: jekyll-theme-cayman
