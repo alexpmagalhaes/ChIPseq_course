@@ -3,7 +3,19 @@
 In this section we will cover mapping and post-processing of alignment files
 Bellow are links to sections we will cover
 
-
+<!-- TOC -->
+* [Mapping and post processing](#mapping-and-post-processing)
+  * [3.1 Mapping aka read alignment](#31-mapping-aka-read-alignment)
+  * [Alignment](#alignment)
+  * [Alignment output: SAM/BAM file format](#alignment-output-sambam-file-format)
+    * [Converting file format from SAM to BAM](#converting-file-format-from-sam-to-bam)
+  * [3.2 Filtering reads aka postprocessing](#32-filtering-reads-aka-postprocessing)
+    * [Multi-mapping reads](#multi-mapping-reads)
+    * [Duplicate reads](#duplicate-reads)
+    * [Filtering workflow](#filtering-workflow)
+    * [1. Sort BAM files by genomic coordinates](#1-sort-bam-files-by-genomic-coordinates)
+    * [2. Filter the reads to keep only uniquely mapping reads](#2-filter-the-reads-to-keep-only-uniquely-mapping-reads)
+<!-- TOC -->
 
 
 ## 3.1 Mapping aka read alignment
