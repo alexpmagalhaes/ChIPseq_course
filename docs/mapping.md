@@ -1,6 +1,6 @@
 # Mapping and post processing
 
-In this section we will cover mapping and post processing of alignment files
+In this section we will cover mapping and post-processing of alignment files
 Bellow are links to sections we will cover
 
 
@@ -40,7 +40,7 @@ In theory, this sounds like a very simple case of string matching. We take the s
 * We have to consider non-unique alignment due to the short length of reads and high percentage of repetitive regions in the genome (e.g. repetitive regions = >50% of the human genome).
 
 There are many different tools that have been developed for alignment of next-generation sequencing data, and some that are more suitable to different technologies. A popular tool commonly used with ChIP-seq data, and the one that we will be using in this workshop is [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml).
-Bowtie2 is a fast and accurate alignment tool that supports gapped, local and paired-end alignment modes and works best for reads that are **at least 50 bp** (shorter read lengths should use [Bowtie1](http://bowtie-bio.sourceforge.net/index.shtml)). 
+Bowtie2 is a fast and accurate alignment tool that supports gaped, local and paired-end alignment modes and works best for reads that are **at least 50 bp** (shorter read lengths should use [Bowtie1](http://bowtie-bio.sourceforge.net/index.shtml)). 
 
 ![](https://alexpmagalhaes.github.io/ChIPseq_course/img/softclipping.png)
 
@@ -77,7 +77,7 @@ bowtie2 -p 6 -q --local \
 
 ## Alignment output: SAM/BAM file format
 
-The output from the Bowtie2 aligner is an unsorted SAM file, also known as **Sequence Alignment/Map format**. The SAM file is a **tab-delimited text file** that contains information for each individual read and its alignment to the genome. While we will go into some features of the SAM format, the paper by [Heng Li et al](http://bioinformatics.oxfordjournals.org/content/25/16/2078.full) provides a lot more detail on the specification.
+The output from the Bowtie2 aligner is an unsorted SAM file, also known as **Sequence Alignment/Map format**. The SAM file is a **tab-delimited text file** that contains information for each individual read and its alignment to the genome. While we will go into some features of the SAM format, the paper by [Heng Li et al.](http://bioinformatics.oxfordjournals.org/content/25/16/2078.full) provides a lot more detail on the specification.
 
 The file begins with a **header**, which is optional. The header is used to describe source of data, reference sequence, method of alignment, etc., this will change depending on the aligner being used. Each section begins with character ‘@’ followed by [**a two-letter record type code**](https://www.samformat.info/sam-format-header). These are followed by two-letter tags and values.
 
@@ -112,7 +112,7 @@ Finally, you have the raw sequence data from the original FASTQ file stored for 
 
 ### Converting file format from SAM to BAM
 
-While the SAM alignment file from Bowtie2 is human readable, we need a BAM alignment file for downstream analysis. A BAM file is a binary equivalent version of the SAM file, in other words, the same file in a compressed format. Therefore, BAM file is not human readable, and it is much smaller in size. BAM file is the typical format used in bioinformatics tools. We will use [Samtools](http://samtools.github.io) to convert the file format from SAM to BAM. Samtools is a program that consists of many utilities for working with the Sequence Alignment/Map (SAM) format. Here, we will use the `samtools view` command to convert our SAM file into its binary compressed version (BAM) and save it to file.
+While the SAM alignment file from Bowtie2 is human-readable, we need a BAM alignment file for downstream analysis. A BAM file is a binary equivalent version of the SAM file, in other words, the same file in a compressed format. Therefore, BAM file is not human-readable, and it is much smaller. BAM file is the typical format used in bioinformatics tools. We will use [Samtools](http://samtools.github.io) to convert the file format from SAM to BAM. Samtools is a program that consists of many utilities for working with the Sequence Alignment/Map (SAM) format. Here, we will use the `samtools view` command to convert our SAM file into its binary compressed version (BAM) and save it to file.
 
 > NOTE: Once we generate the BAM file, we don't need to retain the SAM file anymore - we can delete it to save space.
 
@@ -143,6 +143,6 @@ samtools view -@ 4 -h -S -b \
 > _**NOTE:** After performing read alignment, it's useful to evaluate the mapping rate for each sample by taking look at the log files. Additionally, it is common to aggregate QC metrics and visualize them with plots using tools such as [MultiQC](http://multiqc.info). This is important to do prior to moving on to the next steps of the analysis._
 
 
-To continue with the tutorial please go to [Mapping and post processing](https://alexpmagalhaes.github.io/ChIPseq_course/mapping.md)
+To continue with the tutorial please go to [Mapping and post-processing](https://alexpmagalhaes.github.io/ChIPseq_course/mapping.md)
 
 To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index.md)

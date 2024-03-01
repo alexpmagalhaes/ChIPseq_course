@@ -26,7 +26,7 @@ Read quality is the first step in all the analyses of sequenced reads.
 
 Fastq files can be downloaded from Sequence Read Archive (SRA).
 
-In the folder `/project/pcpool_data/molmed/fastq/ChIP-seq/` you can find fastq files from the Chen et al paper.
+In the folder `/project/pcpool_data/molmed/fastq/ChIP-seq/` you can find fastq files from the Chen et al. paper.
 
 
 * SRR001996: GFP
@@ -61,7 +61,7 @@ The exemple bellow is for **Nanog** and **GFP** samples that we will use for thi
 ```bash
 #DO NOT RUN ME
 
-# curl alows a user to download the fastq files
+# curl allows a user to download the fastq files
 curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR002/SRR002006/SRR002006.fastq.gz -o SRR002006_Illumina_sequencing_of_Mouse_ES_nanog_genomic_fragment_library.fastq.gz
 curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001998/SRR001998.fastq.gz -o SRR001998_Illumina_sequencing_of_Mouse_ES_GFP_genomic_fragment_library.fastq.gz
 curl -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR002/SRR002007/SRR002007.fastq.gz -o SRR002007_Illumina_sequencing_of_Mouse_ES_nanog_genomic_fragment_library.fastq.gz
@@ -87,14 +87,14 @@ In the project folders there is already fastq files for Nanog and GFP control fa
 
 ### Unmapped read data: FASTQ file format
 
-The [FASTQ](https://en.wikipedia.org/wiki/FASTQ_format) file format is the defacto file format for sequence reads generated from next-generation sequencing technologies. This file format evolved from FASTA in that it contains sequence data, but also contains quality information. Similar to FASTA, the FASTQ file begins with a header line. The difference is that the FASTQ header is denoted by a `@` character. For a single record (sequence read) there are four lines, each of which are described below:
+The [FASTQ](https://en.wikipedia.org/wiki/FASTQ_format) file format is the default file format for sequence reads generated from next-generation sequencing technologies. This file format evolved from FASTA in that it contains sequence data, but also contains quality information. Similar to FASTA, the FASTQ file begins with a header line. The difference is that the FASTQ header is denoted by a `@` character. For a single record (sequence read) there are four lines, each of which are described below:
 
-|Line|Description|
-|----|-----------|
-|1|Always begins with '@' and then information about the read|
-|2|The actual DNA sequence|
-|3|Always begins with a '+' and sometimes the same info in line 1|
-|4|Has a string of characters which represent the quality scores; must have same number of characters as line 2|
+| Line | Description                                                                                                  |
+|------|--------------------------------------------------------------------------------------------------------------|
+| 1    | Always begins with '@' and then information about the read                                                   |
+| 2    | The actual DNA sequence                                                                                      |
+| 3    | Always begins with a '+' and sometimes the same info in line 1                                               |
+| 4    | Has a string of characters which represent the quality scores; must have same number of characters as line 2 |
 
 Let's use the following read as an example:
 
@@ -113,24 +113,24 @@ As mentioned previously, line 4 has characters encoding the quality of each nucl
     Quality score: 0........10........20........30........40                                
 ```
  
-Using the quality encoding character legend, the first nucelotide in the read (C) is called with a quality score of 31, and our Ns are called with a score of 2. **As you can tell by now, this is a bad read.** 
+Using the quality encoding character legend, the first nucleotide in the read (C) is called with a quality score of 31, and our Ns are called with a score of 2. **As you can tell by now, this is a bad read.** 
 
 Each quality score represents the probability that the corresponding nucleotide call is incorrect. This quality score is logarithmically based and is calculated as:
 
 	Q = -10 x log10(P), where P is the probability that a base call is erroneous
 
-These probabaility values are the results from the base calling algorithm and dependent on how much signal was captured for the base incorporation. The score values can be interpreted as follows:
+These probability values are the results from the base calling algorithm and dependent on how much signal was captured for the base incorporation. The score values can be interpreted as follows:
 
-|Phred Quality Score |Probability of incorrect base call |Base call accuracy|
-|:-------------------|:---------------------------------:|-----------------:|
-|10	|1 in 10 |	90%|
-|20	|1 in 100|	99%|
-|30	|1 in 1000|	99.9%|
-|40	|1 in 10,000|	99.99%|
-|50	|1 in 100,000|	99.999%|
-|60	|1 in 1,000,000|	99.9999%|
+| Phred Quality Score | Probability of incorrect base call | Base call accuracy |
+|:--------------------|:----------------------------------:|-------------------:|
+| 10	                 |              1 in 10               |               	90% |
+| 20	                 |              1 in 100              |               	99% |
+| 30	                 |             1 in 1000              |             	99.9% |
+| 40	                 |            1 in 10,000             |            	99.99% |
+| 50	                 |            1 in 100,000            |           	99.999% |
+| 60	                 |           1 in 1,000,000           |          	99.9999% |
 
-Therefore, for the first nucleotide in the read (C), there is less than a 1 in 1000 chance that the base was called incorrectly. However, for the end of the read, there is greater than 50% probabaility that the base is called incorrectly.
+Therefore, for the first nucleotide in the read (C), there is less than a 1 in 1000 chance that the base was called incorrectly. However, for the end of the read, there is greater than 50% probability that the base is called incorrectly.
 
 ## Assessing sequence read quality with FastQC
 
@@ -142,7 +142,7 @@ The main features of FastQC are:
 
 * Imports data in FASTQ files (or BAM files)
 * Evaluates the reads automatically and identifies potential issues in the data
-* Generates a HTML-based quality report with graphs and tables
+* Generates an HTML-based quality report with graphs and tables
 
 
 ### Running FastQC  
@@ -166,7 +166,7 @@ fastqc --outdir ./qc_report --threads 6 ./Nanog_Mouse_ES_merged.fastq.gz
 
 You should see **two output files** generated:
 
-1. The first is an **HTML file** which is a self-contained document with various graphs embedded into it. Each of the graphs evaluate different quality aspects of our data, we will discuss in more detail in this lesson.
+1. The first is an **HTML file** which is a self-contained document with various graphs embedded into it. Each of the graphs evaluates different quality aspects of our data, we will discuss in more detail in this lesson.
 
 2. Alongside the HTML file is a **zip file** (with the same name as the HTML file, but with .zip added to the end). This file contains the different plots from the report as separate image files but also contains data files which are designed to be easily parsed to allow for a more detailed and automated evaluation of the raw data on which the QC report is built.
 
@@ -206,7 +206,7 @@ The **[Sequence duplication level](https://www.bioinformatics.babraham.ac.uk/pro
 
 #### Over-represented sequences
 
-**[Over-represented sequences](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/9%20Overrepresented%20Sequences.html)** could come from actual biological significance, or biases introduced during the sequencing. With ChIP-seq, you expect to see over-represented sequences in the immunoprecipitation sample, because that's exactly what you're doing - enriching for particular sequences based on binding affinity. However, lack of over-represented sequences in FastQC report doesn’t mean you have a bad experiment. If you observe over-represented sequences in the input sample, that usually suggests some bias in the protocol to specific regions. 
+**[Over-represented sequences](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/9%20Overrepresented%20Sequences.html)** could come from actual biological significance, or biases introduced during the sequencing. With ChIP-seq, you expect to see over-represented sequences in the immuno-precipitation sample, because that's exactly what you're doing - enriching for particular sequences based on binding affinity. However, lack of over-represented sequences in FastQC report doesn't mean you have a bad experiment. If you observe over-represented sequences in the input sample, that usually suggests some bias in the protocol to specific regions. 
 
 
 #### K-mer content
@@ -218,7 +218,7 @@ The **[Kmer content](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/H
 
 ### Conclusion
 
-Based on the metrics and plots generated by FastQC, we have a poor quality sample to move forward with. However this libraries are very old and they are a reflexion of sequencing technology from 2010s. Typically, you would generate these reports for all samples in your dataset and keep track of any samples that did not fare as well. We focused on the interpretation of selected plots that are particularly relevant for ChIP-seq, but if you would like to go through the remaining plots and metrics, FastQC has a well-documented [manual page](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) with [more details](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/) (under the Analysis Modules directory) about all the plots in the report.
+Based on the metrics and plots generated by FastQC, we have a poor quality sample to move forward with. However, these libraries are very old, and they are a reflexion of sequencing technology from 2010s. Typically, you would generate these reports for all samples in your dataset and keep track of any samples that did not fare as well. We focused on the interpretation of selected plots that are particularly relevant for ChIP-seq, but if you would like to go through the remaining plots and metrics, FastQC has a well-documented [manual page](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) with [more details](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/) (under the Analysis Modules directory) about all the plots in the report.
 
 
 
@@ -231,9 +231,9 @@ Trimming is the process of removing unwanted sequence prior to sequence alignmen
   * If the read length is 25bp, there is no need to trim - adapter sequences will not be included in reads of inserts >25 bp.
   * If you perform trimming, then there is no need to use soft-clipping during the alignment.
   * After trimming, a minimum read length of 25bp should be imposed, as reads smaller than this are hard to align accurately.
-  * Should you choose not to trim reads, you will need to use `--local` when runing Bowtie2 - this will perform "soft-clipping" to ignore parts of the reads that are of low quality.
+  * Should you choose not to trim reads, you will need to use `--local` when running Bowtie2 - this will perform "soft-clipping" to ignore parts of the reads that are of low quality.
 
-There are many programs to do QC, and many specific tools for each one. For now we are going to focus on Cutadapt  
+There are many programs to do QC, and many specific tools for each one. For now, we are going to focus on Cutadapt  
 
 ```bash
 #DO NOT RUN ME
@@ -242,13 +242,13 @@ cutadapt
     --minimum-length 25 #minimum length of the read
     --cores 6 #number of cores
     --adapter $adaptors #adapter sequence
-    --output $fq1_trimmed #output file (usualy is good to attach a reference to the name like "_trimmed")
+    --output $fq1_trimmed #output file (usually is good to attach a reference to the name like "_trimmed")
     $FQ #input file
 
 ```
 
-> _NOTE_:  It is important to note that the libraries covered in this tutorial are 25bp and thus no not contain any adapters so we will skip this step.
+> _NOTE_:  It is important to note that the libraries covered in this tutorial are 25bp and thus no not contain any adapters, so we will skip this step.
 
-To continue with the tutorial please go to [Mapping and post processing](https://alexpmagalhaes.github.io/ChIPseq_course/coverage.md)
+To continue with the tutorial please go to [Mapping and post-processing](https://alexpmagalhaes.github.io/ChIPseq_course/coverage.md)
 
 To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index.md)
