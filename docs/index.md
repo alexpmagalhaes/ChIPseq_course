@@ -49,7 +49,7 @@ During the course we will cover this steps:
 
 The ChIP data is available at:
 
-/project/pcpool_data
+/project/pcpool_data/molmed/ChIPseq
 
 and to activate the conda environment 
 type
