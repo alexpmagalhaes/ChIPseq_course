@@ -5,6 +5,7 @@ Bellow are links to sections we will cover
 
 
 
+
 ## 3.1 Mapping aka read alignment
 
 The next step is to align the reads to genome assembly.
@@ -29,7 +30,10 @@ The NGS reads are aligned with Alignment tool against the reference genome seque
 
 In ChIP-Seq experiments, it is usually more appropriate to eliminate reads mapping to multiple locations and to perform soft-clipping to eliminate any low quality sequence from the reads.
 
-![](https://alexpmagalhaes.github.io/ChIPseq_course/img/Alignment_errors.png)
+<p align="center">
+	<img src="https://alexpmagalhaes.github.io/ChIPseq_course/img/Alignment_errors.png" width="600" alt="">
+</p>
+
 
 
 In theory, this sounds like a very simple case of string matching. We take the sequence read and figure out where it originated from in the reference genome. However, in practice, this is **actually quite difficult!** This is because:
@@ -42,7 +46,11 @@ In theory, this sounds like a very simple case of string matching. We take the s
 There are many different tools that have been developed for alignment of next-generation sequencing data, and some that are more suitable to different technologies. A popular tool commonly used with ChIP-seq data, and the one that we will be using in this workshop is [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml).
 Bowtie2 is a fast and accurate alignment tool that supports gaped, local and paired-end alignment modes and works best for reads that are **at least 50 bp** (shorter read lengths should use [Bowtie1](http://bowtie-bio.sourceforge.net/index.shtml)). 
 
-![](https://alexpmagalhaes.github.io/ChIPseq_course/img/softclipping.png)
+<p align="center">
+	<img src="https://alexpmagalhaes.github.io/ChIPseq_course/img/softclipping.png" width="700" alt="">
+</p>
+
+
 
 By default, Bowtie2 will perform a global *end-to-end read alignment*, which aligns from the first to the last base of the read. This alignment is best for reads that have already been trimmed for quality and adapters (e.g. reads where nucleotide bases of poor quality or matching adapter sequences have been removed from the ends of the reads prior to alignment). However, Bowtie2 also has a _local alignment mode_, which, in contrast to end-to-end alignment, ignores portions at the ends of the reads that do match well to the reference genome. This is referred to as **soft-clipping** and allows for a more accurate alignment. The procedure can carry a small penalty for each soft-clipped base, but amounts to a significantly smaller penalty than mismatching bases. In contrast to trimming, which removes the unwanted sequence (hard-clipping), soft-clipping retains the soft-clipped base in the sequence and simply marks it. _We will use this option since we did not trim our reads._
 
@@ -83,7 +91,7 @@ The file begins with a **header**, which is optional. The header is used to desc
 
 Following the header is the **alignment section**. Each line corresponds to the alignment information for a single read. Each alignment line has **11 mandatory fields for essential mapping information** and a variable number of other fields for aligner-specific information. 
 
-![](https://alexpmagalhaes.github.io/ChIPseq_course/img/sam_bam.png)
+![SAM1](https://alexpmagalhaes.github.io/ChIPseq_course/img/sam_bam.png)
 
 An example read mapping is displayed above. *Note that the example above spans two lines, but in the actual file it is a single line.* Let's go through the fields one at a time. 
 
@@ -96,7 +104,7 @@ An example read mapping is displayed above. *Note that the example above spans t
 
 Now to the remaining fields in our SAM file:
 
-![](https://alexpmagalhaes.github.io/ChIPseq_course/img/sam_bam3.png)
+![SAM2](https://alexpmagalhaes.github.io/ChIPseq_course/img/sam_bam3.png)
 
 The next three fields are more pertinent to paired-end data. 
 
@@ -142,7 +150,102 @@ samtools view -@ 4 -h -S -b \
 
 > _**NOTE:** After performing read alignment, it's useful to evaluate the mapping rate for each sample by taking look at the log files. Additionally, it is common to aggregate QC metrics and visualize them with plots using tools such as [MultiQC](http://multiqc.info). This is important to do prior to moving on to the next steps of the analysis._
 
+## 3.2 Filtering reads aka postprocessing
 
-To continue with the tutorial please go to [Mapping and post-processing](https://alexpmagalhaes.github.io/ChIPseq_course/mapping.md)
+
+A key issue when working with a ChIP-seq data is to **move forward with only the uniquely mapping reads**.  Allowing for multi-mapped reads increases the number of usable reads and the sensitivity of peak detection; however, the number of false positives may also increase [[1]](https://www.ncbi.nlm.nih.gov/pubmed/21779159/). To increase our confidence in peak calling and improve data reproducibility, we need to **filter out both multi-mapping reads and duplicate reads**.
+
+### Multi-mapping reads
+
+Multi-mapping reads are reads that are mapping to multiple loci on the reference genome.
+
+<p align="center">
+ <img src="https://alexpmagalhaes.github.io/ChIPseq_course/img/Multimapping_reads.png" width="500" alt="">
+</p>
+
+
+### Duplicate reads
+
+Duplicate reads are reads that map at the exact same location, with the same coordinates and the same strand. These duplicates can arise from experimental artifacts, but can also contribute to genuine ChIP-signal.
+
+* **The bad kind of duplicates:** If initial starting material is low, this can lead to over-amplification of this material before sequencing. Any biases in PCR will compound this problem and can lead to artificially enriched regions. 
+* **The good kind of duplicates:** You can expect some biological duplicates with ChIP-seq since you are only sequencing a small part of the genome. This number can increase if your depth of coverage is excessive or if your protein only binds to few sites. If there are a good proportion of biological duplicates, removal can lead to an underestimation of the ChIP signal. 
+    
+To get an idea on **what to expect in terms of duplication rate**, we encourage you to take a look at the [ENCODE quality metrics for complexity](https://www.encodeproject.org/data-standards/terms/#library). Different metrics are described and there is also a table which describes how to classify a sample as good, moderate or bad, based on these values.
+
+<p align="center">
+ <img src="https://alexpmagalhaes.github.io/ChIPseq_course/img/Duplicate_reads.png" width="500" alt="">
+</p>
+
+> #### Some additional notes on duplicates
+> Most peak calling algorithms also implement methods to deal with duplicate reads. While they are commonly removed prior to peak calling, another option is to leave them now and deal with them later. **Skip the duplicate filtering at this step if**:
+> * You are planning on performing a differential binding analysis.
+> * You are expecting binding in repetitive regions (also, use paired-end sequencing) 
+> * You have included [UMIs](https://www.illumina.com/techniques/sequencing/ngs-library-prep/multiplexing/unique-molecular-identifiers.html) into your experimental setup.
+
+
+### Filtering workflow
+
+The older version of Bowtie2 had an argument that allowed us to easily perform filtering during the alignment process. But the latest Bowtie2 does not have this option. As a result, the filtering will be done with [samtools](https://www.htslib.org/).
+This **lesson will consist of two steps**:
+
+1. Sort BAM files by genomic coordinates (using `samtools`).
+2. Filter the reads to keep only uniquely mapping reads (using `gatk`). This will also remove any unmapped reads.
+
+
+### 1. Sort BAM files by genomic coordinates
+
+Before we can do the filtering, we need to sort our BAM alignment files by genomic coordinates (instead of by name). To perform the sorting, we could use [Samtools](http://www.htslib.org/), a tool we previously used when converting our SAM file to a BAM file. 
+
+```bash
+samtools sort -@ 4 -O BAM -o ./bam/Nanog_Mouse_ES_chip.sorted.bam ./bam/Nanog_Mouse_ES_chip.bam
+
+samtools sort -@ 4 -O BAM -o ./bam/GFP_Mouse_ES_chip.sorted.bam ./bam/GFP_Mouse_ES_chip.bam
+```
+
+### 2. Filter the reads to keep only uniquely mapping reads
+
+Next, we can filter the sorted BAM files to keep only uniquely mapping reads. We will use the `gatk` command with the following parameters:
+
+
+
+```bash
+gatk MarkDuplicates \
+  --java-options "-XX:ParallelGCThreads=6 -Xmx8g" \
+  --INPUT ./bam/GFP_Mouse_ES_chip.sorted.bam \
+  --OUTPUT ./bam/GFP_Mouse_ES_chip.filtered.bam \
+  --METRICS_FILE GFP_Mouse_ES_chip.dedup-metrics.txt \
+  --REMOVE_DUPLICATES true \
+  --VALIDATION_STRINGENCY LENIENT
+  
+gatk MarkDuplicates \
+  --java-options "-XX:ParallelGCThreads=6 -Xmx8g" \
+  --INPUT ./bam/Nanog_Mouse_ES_chip.sorted.bam \
+  --OUTPUT ./bam/Nanog_Mouse_ES_chip.filtered.bam \
+  --METRICS_FILE Nanog_Mouse_ES_chip.dedup-metrics.txt \
+  --REMOVE_DUPLICATES true \
+  --VALIDATION_STRINGENCY LENIENT
+
+```
+
+
+> ### Filtering out Blacklisted Regions
+> Although we do not perform this step, it is common practice to apply an additional level of filtering to our BAM files. That is, we remove alignments that occur with defined Blacklisted Regions. **We will filter out blacklist regions post-peak calling.**
+> 
+> Blacklisted regions represent artifact regions that tend to show artificially high signal (excessive unstructured anomalous reads mapping). These regions are often found at specific types of repeats such as centromeres, telomeres and satellite repeats and typically appear uniquely mappable so simple mappability filters applied above do not remove them. The ENCODE and modENCODE consortia have compiled blacklists for various species and genome versions including human, mouse, worm and fly. These blacklisted regions (coordinate files) can be filtered out from our alignment files before proceeding to peak calling.
+> 
+> If we wanted to filter blacklist regions at this point in our workflow, we would use the following code:
+> 
+> ``` 
+> # DO NOT RUN
+> bedtools intersect -v Nanog_Mouse_ES_chip.filtered.bam -b mm10-blacklist.v2.bed > Nanog_Mouse_ES_chip.filtered.blacklist_filtered.bam
+> ```
+> 
+> _bedtools is a suite of tools that we will discuss in more detail in a later lesson when blacklist filtering is applied._
+
+
+
+
+To continue with the tutorial please go to [Peak Calling](https://alexpmagalhaes.github.io/ChIPseq_course/peak_calling)
 
 To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index.md)
