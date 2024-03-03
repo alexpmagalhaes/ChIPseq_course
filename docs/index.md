@@ -78,7 +78,6 @@ To start with the exercises pleat follow the links bellow
 2. [Mapping and post processing](https://alexpmagalhaes.github.io/ChIPseq_course/mapping)
 3. [Bam coverage](https://alexpmagalhaes.github.io/ChIPseq_course/coverage)
 4. [Peak calling](https://alexpmagalhaes.github.io/ChIPseq_course/peak_calling)
-5. [ChIP quality assessment](https://alexpmagalhaes.github.io/ChIPseq_course/coverage)
-6. [ChIPseekeR and gene assignment](https://alexpmagalhaes.github.io/ChIPseq_course/chipseeker)
-7. [Results visualization in R](https://alexpmagalhaes.github.io/ChIPseq_course/visul_r)
+5. [BAM Coverage ](https://alexpmagalhaes.github.io/ChIPseq_course/coverage)
+6. [Peak annotation and analysis](https://alexpmagalhaes.github.io/ChIPseq_course/chipseeker)
 
