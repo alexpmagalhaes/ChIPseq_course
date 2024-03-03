@@ -1,0 +1,137 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+library(ChIPseeker)
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+library(clusterProfiler)
+library(org.Mm.eg.db)
+library(BSgenome)
+library(BSgenome.Mmusculus.UCSC.mm10)
+library(GenomicRanges)
+library(rtracklayer)
+library(JASPAR2020)
+library(TFBSTools)
+library(motifmatchr)
+```
+
+```{r}
+#set working directory
+setwd("/Users/magalhae/Desktop/wd")
+
+```
+
+
+```{r}
+#set Mouse mm10 TxDB annotation as an object
+txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
+allGeneGR <- genes(TxDb.Mmusculus.UCSC.mm10.knownGene)
+```
+
+```{r}
+#read macsPeak file
+
+macsPeaks <- "macs2/nanog_peaks.xls"
+macsPeaks_DF <- read.delim(macsPeaks,comment.char="#")
+macsPeaks_GR <- GRanges(seqnames=macsPeaks_DF[,"chr"],
+                        IRanges(macsPeaks_DF[,"start"],macsPeaks_DF[,"end"]))
+mcols(macsPeaks_GR) <- macsPeaks_DF[,c("abs_summit", "fold_enrichment")]
+
+```
+
+```{r}
+peakAnno <- annotatePeak("/Users/magalhae/Desktop/wd/macs2/nanog_peaks.narrowPeak", #read the macs2 peak file
+                         TxDb=txdb, #set annotation file
+                         annoDb="org.Mm.eg.db", #set annotation database so we can have gene names
+                         tssRegion=c(-1000, 500)) #define the TSS region 
+
+```
+
+
+```{r}
+#define peak annotation file as data frame
+df <- as.data.frame(peakAnno)
+
+#write it as CSV file
+write.csv(df, "ChIPseeker/nanog_peaks.peaks.annotated.csv")
+```
+```{r, eval=FALSE}
+#store gene Ids in list
+gene_ids <- df$geneId
+
+#store mouse mm10 gene Ids in list
+allGeneIDs <- allGeneGR$gene_id
+
+GO_result <- enrichGO(gene = gene_ids, 
+                      universe = allGeneIDs,
+                      OrgDb = org.Mm.eg.db,
+                      ont = "BP")
+
+dotplot(GO_result)
+```
+```{r}
+#Define the center of the peaks (summit)
+macsSummits_GR <- GRanges(seqnames(macsPeaks_GR), IRanges(macsPeaks_GR$abs_summit,
+    macsPeaks_GR$abs_summit), score = macsPeaks_GR$fold_enrichment)
+macsSummits_GR <- resize(macsSummits_GR, 100, fix = "center")
+```
+
+```{r}
+#Get sequences from genome
+peaksSequences <- getSeq(BSgenome.Mmusculus.UCSC.mm10, macsSummits_GR)
+names(peaksSequences) <- paste0(seqnames(macsSummits_GR), ":", start(macsSummits_GR),
+    "-", end(macsSummits_GR))
+```
+
+```{r}
+#write fasta file to be submited to MEME
+writeXStringSet(peaksSequences, file = "Nanog_peaks.fa")
+```
+
+```{r}
+#load gff file from FIMO
+motifGFF <- import("/Users/magalhae/Desktop/wd/meme/fimo_out_1/fimo.gff")
+```
+```{r}
+# Make necessary changes and export
+motifGFF$Name <- paste0(seqnames(motifGFF),":",
+                        start(motifGFF),"-",end(motifGFF))
+motifGFF$ID <- paste0(seqnames(motifGFF),":",
+                      start(motifGFF),"-",end(motifGFF))
+export.gff3(motifGFF,con="fimo_out_1_Updated.gff")
+```
+```{r}
+# Get motifs from JASPAR with TFBStools
+pfm <- getMatrixByName(JASPAR2020, 
+                       name="Nanog")
+pfm
+
+```
+
+
+```{r}
+# Motif scanning with motifmatchr
+
+NanogMotifs <- matchMotifs(pfm,
+                         macsSummits_GR,BSgenome.Mmusculus.UCSC.mm10, 
+                         out = "positions")
+NanogMotifs
+
+```
+
+
+```{r}
+#Export results
+export.bed(NanogMotifs[[1]],con = "NanogMotifsMotifs.bed")
+```
+
+```{r}
+
+```
+
