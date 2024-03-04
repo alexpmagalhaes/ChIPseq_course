@@ -260,4 +260,4 @@ gatk MarkDuplicates \
 
 To continue with the tutorial please go to [Peak Calling](https://alexpmagalhaes.github.io/ChIPseq_course/peak_calling)
 
-To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index.md)
+To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index)

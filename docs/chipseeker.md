@@ -274,7 +274,7 @@ export.bed(MycMotifs[[1]],con = "NanogMotifsMotifs.bed")
 
 Notebook with all the commands can be found [here](https://github.com/alexpmagalhaes/ChIPseq_course/blob/main/docs/resources/ChipExercises.Rmd)
 
-To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index.md)
+To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index)
 
 
 <details>

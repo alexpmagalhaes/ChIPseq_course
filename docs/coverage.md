@@ -240,4 +240,4 @@ The figure should look like the one displayed below. We observe that the **repli
 
 To continue with the tutorial please go to [Peak annotation and analysis](https://alexpmagalhaes.github.io/ChIPseq_course/chipseeker)
 
-To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index.md)
+To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index

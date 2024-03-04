@@ -245,4 +245,4 @@ This example shows that peaks calling was successful and that we can now move to
 
 To continue with the tutorial please go to [Bam coverage](https://alexpmagalhaes.github.io/ChIPseq_course/coverage)
 
-To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index.md)
+To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index)

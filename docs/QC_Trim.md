@@ -268,4 +268,4 @@ cutadapt
 
 To continue with the tutorial please go to [Mapping and post-processing](https://alexpmagalhaes.github.io/ChIPseq_course/mapping)
 
-To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index.md)
+To go back to the home page follow this [Link](https://alexpmagalhaes.github.io/ChIPseq_course/index)
