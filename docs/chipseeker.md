@@ -56,7 +56,8 @@ Key reference: Pepke *et al*. (2009) Computation for ChIP-seq and RNA-seq studie
 
 For this we will need to load the following libraries
 
-```{r, eval=FALSE}
+```{r}
+
 library(ChIPseeker)
 library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 library(clusterProfiler)
@@ -74,7 +75,7 @@ Then we will set the working directory to the results folder
 and set the Mouse mm10 TxDB annotation as an object
 and get a list of genes
 
-```{r, eval=FALSE}
+```{r}
 #set the working directory
 setwd("Whaever folder you choose") 
 

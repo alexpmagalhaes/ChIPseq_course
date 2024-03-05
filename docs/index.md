@@ -76,8 +76,7 @@ To start with the exercises pleat follow the links bellow
 
 1. [Sequence QC and Trimming](https://alexpmagalhaes.github.io/ChIPseq_course/QC_Trim)
 2. [Mapping and post processing](https://alexpmagalhaes.github.io/ChIPseq_course/mapping)
-3. [Bam coverage](https://alexpmagalhaes.github.io/ChIPseq_course/coverage)
-4. [Peak calling](https://alexpmagalhaes.github.io/ChIPseq_course/peak_calling)
-5. [BAM Coverage ](https://alexpmagalhaes.github.io/ChIPseq_course/coverage)
-6. [Peak annotation and analysis](https://alexpmagalhaes.github.io/ChIPseq_course/chipseeker)
+3. [Peak calling](https://alexpmagalhaes.github.io/ChIPseq_course/peak_calling)
+4. [BAM Coverage ](https://alexpmagalhaes.github.io/ChIPseq_course/coverage)
+5. [Peak annotation and analysis](https://alexpmagalhaes.github.io/ChIPseq_course/chipseeker)
 
