@@ -65,7 +65,7 @@ type
 
 source $HOME/.bashrc
 
-conda activate /project/pcpool_data/molmed/molmod
+conda activate /project/pcpool_data/molmed/molmed_env
 
 ```
 
