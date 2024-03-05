@@ -76,6 +76,7 @@ and set the Mouse mm10 TxDB annotation as an object
 and get a list of genes
 
 ```{r}
+
 #set the working directory
 setwd("Whaever folder you choose") 
 
@@ -92,7 +93,8 @@ Now we will be using `ChIPseeker` to annotate the peaks
 
 ### Read the peak files from MACS2
 
-```{r, eval=FALSE}
+```{r}
+
 #read macsPeak file from narrowPeak (BED file)
 macs_peak <- readPeakFile("macs2/nanog_peaks.narrowPeak")
 
@@ -107,7 +109,7 @@ mcols(macsPeaks_GR) <- macsPeaks_DF[,c("abs_summit", "fold_enrichment")]
 
 ### Annotation with TxDb file
 
-```{r, eval=FALSE}
+```{r}
 
 #annotate the peaks
 peakAnno <- annotatePeak("macs2/nanog_peaks.narrowPeak", #read the macs2 peak file
@@ -130,7 +132,9 @@ The following will perform Gene Ontology (GO) term enrichment analysis for each 
 
 
 ### Make lists of gene Ids identified in peak annotation step
-```{r, eval=FALSE}
+
+```{r}
+
 #store gene Ids in list
 gene_ids <- df$geneId
 
@@ -140,7 +144,7 @@ allGeneIDs <- allGeneGR$gene_id
 
 ### Run enrichment analysis and plot
 
-```{r, eval=FALSE}
+```{r}
 #get GO enrichment for *Biological process*
 GO_result <- enrichGO(gene = gene_ids, 
                       universe = allGeneIDs,
@@ -167,7 +171,8 @@ Enrichment analysis of known DNA binding motifs or *de novo* discovery of novel 
 
 First we need to load the BSgenome object for the genome we are working on, UCSC’s mm10 build for the mouse genome, BSgenome.Mmusculus.UCSC.mm10.
 
-```{r, eval=FALSE}
+```{r}
+
 macsSummits_GR <- GRanges(seqnames(macsPeaks_GR), IRanges(macsPeaks_GR$abs_summit,
     macsPeaks_GR$abs_summit), score = macsPeaks_GR$fold_enrichment)
 macsSummits_GR <- resize(macsSummits_GR, 100, fix = "center")
@@ -176,7 +181,9 @@ macsSummits_GR <- resize(macsSummits_GR, 100, fix = "center")
 Once we have re-centered our peaks we can use the getSeq function with our GRanges of resized common peaks and the BSgenome object for mm10.
 
 The getSeq function returns a DNAStringSet object containing sequences under peaks.
-```{r, eval=FALSE}
+
+```{r}
+
 peaksSequences <- getSeq(BSgenome.Mmusculus.UCSC.mm10, macsSummits_GR)
 names(peaksSequences) <- paste0(seqnames(macsSummits_GR), ":", start(macsSummits_GR),
     "-", end(macsSummits_GR))
@@ -187,7 +194,8 @@ The writeXStringSet function allows the user to write DNA/RNA/AA(aminoacid)Strin
 
 By default the writeXStringSet function writes the sequence information in FASTA format (as required for MEME-ChIP).
 
-```{r, eval=FALSE}
+```{r}
+
 writeXStringSet(peaksSequences, file = "Nanog_peaks.fa")
 ```
 
@@ -211,7 +219,7 @@ Sadly, this GFF file's naming conventions cause only a fraction of motifs to be 
 
 Fortunately we can parse our motif's GFF file into R and address this using the **import** function in  the **rtracklayer** package.
 
-```{r, echo=TRUE,collapse=F,eval=FALSE}
+```{r}
 
 motifGFF <- import("~/Downloads/fimo.gff")
 ```
@@ -221,13 +229,15 @@ motifGFF <- import("~/Downloads/fimo.gff")
 
 We can give the sequences some more sensible names and export the GFF to file to visualise in IGV.
 
-```{r, echo=TRUE,collapse=F,eval=FALSE}
+```{r}
+
 motifGFF$Name <- paste0(seqnames(motifGFF),":",
                         start(motifGFF),"-",end(motifGFF))
 motifGFF$ID <- paste0(seqnames(motifGFF),":",
                       start(motifGFF),"-",end(motifGFF))
 export.gff3(motifGFF,con="~/Downloads/fimoUpdated.gff")
 ```
+
 ---
 ### Scanning for known motifs 
 
@@ -240,7 +250,8 @@ Often with ChIPseq we may know the motif we are looking for or we can use a set 
 
 We can access the model for the our motif of interest using the **TFBSTools** package and its **getMatrixByName** function.
 
-```{r, echo=TRUE,collapse=F,eval=TRUE}
+```{r}
+
 pfm <- getMatrixByName(JASPAR2020, 
                        name="MYC")
 pfm
@@ -253,7 +264,7 @@ With this PWM we can use the **motifmatchr** package to scan our summits for the
 We will need to provide our PWM, GRanges to scan within and BSGenome object to extract sequence from. 
 We also set the **out** paramter to positions for this instance.
 
-```{r, echo=TRUE,collapse=F,eval=TRUE}
+```{r}
 
 NanogMotifs <- matchMotifs(pfm,
                          macsSummits_GR,BSgenome.Mmusculus.UCSC.mm10, 
@@ -268,6 +279,7 @@ We can export the Myc motif positions within peaks for use later in IGV or for m
 
 
 ```{r}
+
 export.bed(MycMotifs[[1]],con = "NanogMotifsMotifs.bed")
 ```
 
