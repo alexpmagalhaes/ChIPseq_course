@@ -7,7 +7,7 @@ The ChIP data is available at:
 and to activate the conda environment 
 type
 
-`conda activate /project/pcpool_data/molmed/molmod`
+`conda activate /project/pcpool_data/molmed/molmed_env`
 
 
 To start with the exercises pleat follow the link bellow
